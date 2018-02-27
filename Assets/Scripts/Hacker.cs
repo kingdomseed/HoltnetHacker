@@ -18,6 +18,7 @@ public class Hacker : MonoBehaviour {
 
     private void ShowMainMenu()
     {
+        currentScreen = Screen.MainMenu;
         Terminal.ClearScreen();
         Terminal.WriteLine("Welcome to the Holtnet Command Terminal");
         Terminal.WriteLine("Industry Leaders in Robotics, AI,");
