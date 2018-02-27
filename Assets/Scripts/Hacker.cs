@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Hacker : MonoBehaviour {
 
     private int level;
+    private string[] levelsArray = { "1", "2", "3", "4" };
+    private enum Screen { MainMenu, News, Directory, Login, Hidden, Win};
+    private Screen currentScreen = Screen.MainMenu;
 
-	void Start ()
+	public void Start ()
     {
         ShowMainMenu();
     }
@@ -27,29 +31,14 @@ public class Hacker : MonoBehaviour {
 
     private void OnUserInput(string input)
     {
-        bool inputCheck = input.Equals("1") || input.Equals("2") || input.Equals("3") || input.Equals("4");
-        if (inputCheck)
-        {
-            level = Convert.ToInt32(input);
-            switch(level)
-            {
-                case 1:
-                    StartGame(level);
-                    break;
-                case 2:
-                    StartGame(level);
-                    break;
-                case 3:
-                    StartGame(level);
-                    break;
-                default:
-                    StartGame(level);
-                    break;
-            }
-            
-        } else if(input.ToLower().Equals("main menu"))
+        if(input.ToLower().Equals("main menu"))
         {
             ShowMainMenu();
+        }
+        else if (levelsArray.Contains(input))
+        {
+            level = Convert.ToInt32(input);
+            OnLevelSelect(level);
         }
         else
         {
@@ -58,8 +47,25 @@ public class Hacker : MonoBehaviour {
         
     }
 
-    private void StartGame(int level)
+    private void OnLevelSelect(int level)
     {
-        Terminal.WriteLine("You've selected level " + level);
+        switch(level)
+        {
+            case 1:
+                currentScreen = Screen.News;
+                break;
+            case 2:
+                currentScreen = Screen.Directory;
+                break;
+            case 3:
+                currentScreen = Screen.Login;
+                break;
+            case 4:
+                currentScreen = Screen.Hidden;
+                break;
+            default:
+                currentScreen = Screen.Win;
+                break;
+        }
     }
 }
