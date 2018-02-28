@@ -6,13 +6,16 @@ using UnityEngine;
 
 public class Hacker : MonoBehaviour {
 
+    // Game state
     private int level;
+    private ScreenStrings screenStrings;
     private string[] levelsArray = { "1", "2", "3", "4" };
     private enum Screen { MainMenu, News, Directory, Login, Hidden, Win};
     private Screen currentScreen = Screen.MainMenu;
 
 	public void Start ()
     {
+        screenStrings = new ScreenStrings();
         ShowMainMenu();
     }
 
@@ -20,32 +23,24 @@ public class Hacker : MonoBehaviour {
     {
         currentScreen = Screen.MainMenu;
         Terminal.ClearScreen();
-        Terminal.WriteLine("Welcome to the Holtnet Command Terminal");
-        Terminal.WriteLine("Industry Leaders in Robotics, AI,");
-        Terminal.WriteLine("Space Exploration, and Terraforming.");
-        Terminal.WriteLine("---------------------------------------");
-        Terminal.WriteLine("Please Make a Selection:");
-        Terminal.WriteLine("1. Recent News Articles");
-        Terminal.WriteLine("2. Company Directory");
-        Terminal.WriteLine("3. Employee Login");
+        Terminal.WriteLine(screenStrings.Menu);
     }
 
     private void OnUserInput(string input)
     {
-        if(input.ToLower().Equals("main menu"))
+        if(input.ToLower().Equals("menu"))
         {
             ShowMainMenu();
         }
         else if (levelsArray.Contains(input))
         {
-            level = Convert.ToInt32(input);
+            level = int.Parse(input);
             OnLevelSelect(level);
         }
         else
         {
-            Terminal.WriteLine("Please choose a valid input paramter.");
+            Terminal.WriteLine("Your input is invalid.");
         }
-        
     }
 
     private void OnLevelSelect(int level)
@@ -65,7 +60,35 @@ public class Hacker : MonoBehaviour {
                 currentScreen = Screen.Hidden;
                 break;
             default:
-                currentScreen = Screen.Win;
+                Debug.LogWarning("OnLevelSelect activated the default case somehow. currentScreen will not be updated.");
+                break;
+        }
+        ChangeScreen();
+    }
+
+    private void ChangeScreen()
+    {
+        Terminal.ClearScreen();
+        switch(currentScreen)
+        {
+            case Screen.News:
+                Terminal.WriteLine(screenStrings.News);
+                break;
+            case Screen.Directory:
+                Terminal.WriteLine(screenStrings.Directory);
+                break;
+            case Screen.Login:
+                Terminal.WriteLine(screenStrings.Login);
+                break;
+            case Screen.Hidden:
+                Terminal.WriteLine(screenStrings.Hidden);
+                break;
+            case Screen.Win:
+                Terminal.WriteLine(screenStrings.Win);
+                break;
+            default:
+                Debug.LogWarning("Terminal has encountered an error and is returning you to the main menu.");
+                ShowMainMenu();
                 break;
         }
     }
